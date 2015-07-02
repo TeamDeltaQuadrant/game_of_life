@@ -35,6 +35,14 @@ describe 'Game of life' do
     it 'should create a new cell object' do
       expect(subject.is_a?(Cell)).to be true
     end
+    it 'should respond to proper methods' do
+      expect(subject).to respond_to(:alive)
+      expect(subject).to respond_to(:x)
+      expect(subject).to respond_to(:y)
+    end
+    it 'should initzialize properly' do
+      expect(subject.alive).to be false
+    end
   end
 
 end
