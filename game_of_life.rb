@@ -26,11 +26,19 @@ class World
   def live_neighbours_around_cell(cell)
     live_neighbours = []
     # it detects a neighbour to the north
-    if cell.y > 0
-      candidate = self.cell_grid[cell.y-1][cell.x]
-      live_neighbours << candidate if candidate.alive?
-    end
 
+    #   for i in -1..1 do
+    #       for j in -1..1 do
+    #         if self.cell_grid.include?([cell.x+i][cell.y+j])
+    #           candidate = self.cell_grid[cell.x+i][cell.y+j]
+    #           puts candidate
+    #           live_neighbours << candidate if candidate.alive?
+    #         end
+    #       end
+    #   end
+    #
+    #
+    # puts live_neighbours
     live_neighbours
   end
 end
