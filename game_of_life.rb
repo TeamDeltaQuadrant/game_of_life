@@ -18,27 +18,60 @@ class World
     @cols = cols
     @cell_grid = Array.new(rows) do |row|
                     Array.new(cols) do |col|
-                      Cell.new(row, col)
+                      Cell.new(col, row)
                     end
                 end
   end
 
   def live_neighbours_around_cell(cell)
     live_neighbours = []
-    # it detects a neighbour to the north
+    # it detects a neighbour to the north east
+    if cell.y > 0 && cell.x < (cols - 1)
+      candidate = @cell_grid[cell.y - 1][cell.x + 1]
+      live_neighbours << candidate if candidate.alive?
+    end
 
-    #   for i in -1..1 do
-    #       for j in -1..1 do
-    #         if self.cell_grid.include?([cell.x+i][cell.y+j])
-    #           candidate = self.cell_grid[cell.x+i][cell.y+j]
-    #           puts candidate
-    #           live_neighbours << candidate if candidate.alive?
-    #         end
-    #       end
-    #   end
-    #
-    #
-    # puts live_neighbours
+    # it detects a neighbour to the south east
+    if cell.y < (rows - 1) && cell.x < (cols - 1)
+      candidate = @cell_grid[cell.y + 1][cell.x + 1]
+      live_neighbours << candidate if candidate.alive?
+    end
+
+    # it detects a neighbour to the south west
+    if cell.y < (rows - 1) && cell.x > 0
+      candidate = @cell_grid[cell.y + 1][cell.x - 1]
+      live_neighbours << candidate if candidate.alive?
+    end
+
+    # it detects a neighbour to the north west
+    if cell.y > 0 && cell.x > 0
+      candidate = @cell_grid[cell.y - 1][cell.x - 1]
+      live_neighbours << candidate if candidate.alive?
+    end
+
+    # it detects a neighbour to the north
+    if cell.y > 0
+      candidate = @cell_grid[cell.y - 1][cell.x]
+      live_neighbours << candidate if candidate.alive?
+    end
+
+    # it detects a neighbour to the east
+    if cell.x < (cols - 1)
+      candidate = @cell_grid[cell.y][cell.x + 1]
+      live_neighbours << candidate if candidate.alive?
+    end
+
+    # it detects a neighbour to the south
+    if cell.y < (rows - 1)
+      candidate = @cell_grid[cell.y + 1][cell.x]
+      live_neighbours << candidate if candidate.alive?
+    end
+
+    # it detects a neighbour to the west
+    if cell.x > 0
+      candidate = @cell_grid[cell.y][cell.x - 1]
+      live_neighbours << candidate if candidate.alive?
+    end
     live_neighbours
   end
 end

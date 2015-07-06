@@ -4,9 +4,12 @@ require 'rspec'
 require_relative 'game_of_life.rb'
 
 describe 'Game of life' do
+
   let!(:world){ World.new }
+  let!(:cell){ Cell.new(1, 1) }
+
   context 'World' do
-    subject {World.new}
+    subject { World.new }
 
     it 'should create a new world object' do
       expect(subject.is_a?(World)).to be true
@@ -29,11 +32,43 @@ describe 'Game of life' do
     end
 
     it 'should detect a neighbour to the north' do
-      expect(subject.cell_grid[0][1]).to be_dead
-      subject.cell_grid[0][1].alive = true
-      expect(subject.cell_grid[0][1]).to be_alive
-      p subject.live_neighbours_around_cell(subject.cell_grid[1][1])
-      #expect(subject.live_neighbours_around_cell(subject.cell_grid[1][1]).count).to be(1)
+      subject.cell_grid[cell.y - 1][cell.x].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the north east' do
+      subject.cell_grid[cell.y - 1][cell.x + 1].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the east' do
+      subject.cell_grid[cell.y][cell.x + 1].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the south east' do
+      subject.cell_grid[cell.y + 1][cell.x + 1].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the south' do
+      subject.cell_grid[cell.y + 1][cell.x].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the south west' do
+      subject.cell_grid[cell.y + 1][cell.x - 1].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the west' do
+      subject.cell_grid[cell.y][cell.x - 1].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
+    end
+
+    it 'should detect a neighbour to the north west' do
+      subject.cell_grid[cell.y - 1][cell.x - 1].alive = true
+      expect(subject.live_neighbours_around_cell(cell).count).to eq(1)
     end
 
   end
@@ -75,9 +110,9 @@ describe 'Game of life' do
     end
 
     it 'should plant seeds properly' do
-      game = Game.new(world, [[1, 2], [0, 2]])
-      expect(world.cell_grid[1][2]).to be_alive
-      expect(world.cell_grid[0][2]).to be_alive
+      game = Game.new(world, [[1, 0], [2, 0]])
+      expect(world.cell_grid[1][0]).to be_alive
+      expect(world.cell_grid[2][0]).to be_alive
     end
   end
 
