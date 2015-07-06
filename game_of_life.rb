@@ -11,11 +11,41 @@ class Game
   end
 
   def tick!
+    next_round_live_cells = []
+    next_round_dead_cells = []
+
     world.cells.each do |cell|
+      neighbours = world.live_neighbours_around_cell(cell).count
+      # puts neighbours
       #Rule 1
-      if cell.alive? and world.live_neighbours_around_cell(cell).count < 2
-        cell.die!
+      if cell.alive? && neighbours < 2
+        #puts "0 & 1 neighbour " + cell.x.to_s + ", " + cell.y.to_s
+        next_round_dead_cells << cell
       end
+
+      #Rule 2
+      if cell.alive? && [2, 3].include?(neighbours)
+        #puts "2 & 3 neighbours " + cell.x.to_s + ", " + cell.y.to_s
+        next_round_live_cells << cell
+
+      end
+
+      #Rule 3
+      if cell.alive? && neighbours > 3
+        #puts "4 & mehr neighbours " + cell.x.to_s + ", " + cell.y.to_s
+        next_round_dead_cells << cell
+      end
+
+      #Rule 4
+      if cell.dead? && neighbours == 3
+        next_round_live_cells << cell
+      end
+    end
+    next_round_live_cells.each do |cell|
+      cell.revive!
+    end
+    next_round_dead_cells.each do |cell|
+      cell.die!
     end
   end
 
@@ -91,14 +121,19 @@ end
 
 class Cell
   attr_accessor :alive, :x, :y
-  def initialize(x=0, y=0)
+  def initialize(x = 0, y = 0)
     @alive = false
     @x = x
     @y = y
   end
 
   def alive?; alive; end
+
   def dead?; !alive; end
+
+  def revive!
+    @alive = true
+  end
 
   def die!
     @alive = false

@@ -133,6 +133,36 @@ describe 'Game of life' do
         expect(world.cell_grid[2][0]).to be_dead
       end
     end
+
+    context 'Rule 2: Any live cell with two or three live neighbours lives on to the next generation.' do
+      it 'should keep cell alive that has two alive neighbours' do
+        game = Game.new(world, [[1, 0], [2, 0], [1, 1]])
+        expect(world.cell_grid[1][0]).to be_alive
+        game.tick!
+        expect(world.cell_grid[1][0]).to be_alive
+        expect(world.cell_grid[2][0]).to be_alive
+        expect(world.cell_grid[1][1]).to be_alive
+      end
+      it 'should keep cell alive that has three alive neighbours' do
+        game = Game.new(world, [[1, 0], [2, 0], [1, 1], [2, 1]])
+        game.tick!
+        expect(world.cell_grid[1][0]).to be_alive
+        expect(world.cell_grid[2][0]).to be_alive
+        expect(world.cell_grid[1][1]).to be_alive
+        expect(world.cell_grid[2][1]).to be_alive
+      end
+    end
+
+    context 'Rule 3: Any live cell with more than three live neighbours dies, as if by overcrowding.' do
+      it 'should kill a alive cell with four alive neighbours' do
+        game = Game.new(world, [[1, 0], [2, 0], [1, 1], [2, 1], [0, 1]])
+        game.tick!
+        expect(world.cell_grid[1][0]).to be_dead
+        expect(world.cell_grid[2][0]).to be_alive
+        expect(world.cell_grid[1][1]).to be_dead
+        expect(world.cell_grid[2][1]).to be_alive
+      end
+    end
   end
 
 end
