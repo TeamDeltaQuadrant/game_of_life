@@ -126,43 +126,69 @@ describe 'Game of life' do
   context 'Rules' do
     let!(:game){Game.new}
     context 'Rule 1: Any live cell with fewer than two live neighbours dies, as if caused by under-population.' do
+      it 'should kill a alive cell with no neighbours' do
+        game.world.cell_grid[1][1].alive = true
+        expect(game.world.cell_grid[1][1]).to be_alive
+        game.tick!
+        expect(game.world.cell_grid[1][1]).to be_dead
+      end
+
       it 'should kill a alive cell with one alive neighbour' do
         game = Game.new(world, [[1, 0], [2, 0]])
         game.tick!
         expect(world.cell_grid[1][0]).to be_dead
         expect(world.cell_grid[2][0]).to be_dead
       end
+
+      it 'should kill a alive cell with two alive neighbour' do
+        game = Game.new(world, [[0, 1], [2, 1], [1, 1]])
+        game.tick!
+        expect(world.cell_grid[1][1]).to be_alive
+      end
     end
 
     context 'Rule 2: Any live cell with two or three live neighbours lives on to the next generation.' do
       it 'should keep cell alive that has two alive neighbours' do
-        game = Game.new(world, [[1, 0], [2, 0], [1, 1]])
-        expect(world.cell_grid[1][0]).to be_alive
+        game = Game.new(world, [[0, 1], [2, 1], [1, 1]])
+        expect(world.live_neighbours_around_cell(world.cell_grid[1][1]).count).to eq(2)
         game.tick!
-        expect(world.cell_grid[1][0]).to be_alive
-        expect(world.cell_grid[2][0]).to be_alive
+        expect(world.cell_grid[0][1]).to be_dead
         expect(world.cell_grid[1][1]).to be_alive
+        expect(world.cell_grid[2][1]).to be_dead
       end
+
       it 'should keep cell alive that has three alive neighbours' do
-        game = Game.new(world, [[1, 0], [2, 0], [1, 1], [2, 1]])
+        game = Game.new(world, [[0, 1], [2, 1], [1, 1], [2, 2]])
+        expect(world.live_neighbours_around_cell(world.cell_grid[1][1]).count).to eq(3)
         game.tick!
-        expect(world.cell_grid[1][0]).to be_alive
-        expect(world.cell_grid[2][0]).to be_alive
+        expect(world.cell_grid[0][1]).to be_dead
         expect(world.cell_grid[1][1]).to be_alive
         expect(world.cell_grid[2][1]).to be_alive
+        expect(world.cell_grid[2][2]).to be_alive
       end
     end
 
     context 'Rule 3: Any live cell with more than three live neighbours dies, as if by overcrowding.' do
       it 'should kill a alive cell with four alive neighbours' do
-        game = Game.new(world, [[1, 0], [2, 0], [1, 1], [2, 1], [0, 1]])
+        game = Game.new(world, [[0, 1], [2, 1], [1, 1], [2, 2], [1, 2]])
+        expect(world.live_neighbours_around_cell(world.cell_grid[1][1]).count).to eq(4)
         game.tick!
-        expect(world.cell_grid[1][0]).to be_dead
-        expect(world.cell_grid[2][0]).to be_alive
+        expect(world.cell_grid[0][1]).to be_alive
         expect(world.cell_grid[1][1]).to be_dead
         expect(world.cell_grid[2][1]).to be_alive
+        expect(world.cell_grid[2][2]).to be_alive
+        expect(world.cell_grid[1][2]).to be_dead
+      end
+    end
+
+    context 'Rule 4: Any dead cell with excactly three live neighbours becomes a live cell, as if by rerpoduction.' do
+      it 'revives dead cells with three alive neighbours' do
+        game = Game.new(world, [[0, 1], [2, 1], [1, 1]])
+        expect(world.live_neighbours_around_cell(world.cell_grid[1][0]).count).to eq(3)
+        game.tick!
+        expect(world.cell_grid[1][0]).to be_alive
+        expect(world.cell_grid[1][2]).to be_alive
       end
     end
   end
-
 end
