@@ -19,6 +19,7 @@ describe 'Game of life' do
       expect(subject).to respond_to(:cols)
       expect(subject).to respond_to(:cell_grid)
       expect(subject).to respond_to(:live_neighbours_around_cell)
+      expect(subject).to respond_to(:cells)
     end
     it 'should create proper cell grid on initialization' do
       expect(subject.cell_grid.is_a?(Array)).to be true
@@ -29,6 +30,11 @@ describe 'Game of life' do
           expect(col.is_a?(Cell)).to be true
         end
       end
+    end
+
+    it 'should add all cells to cells array' do
+      expect(subject.cells.count).to eq(9)
+      expect(subject.cells.count).to eq(9)
     end
 
     it 'should detect a neighbour to the north' do
@@ -84,6 +90,7 @@ describe 'Game of life' do
       expect(subject).to respond_to(:x)
       expect(subject).to respond_to(:y)
       expect(subject).to respond_to(:alive?)
+      expect(subject).to respond_to(:die!)
     end
     it 'should initzialize properly' do
       expect(subject.alive).to be false
@@ -122,8 +129,8 @@ describe 'Game of life' do
       it 'should kill a alive cell with one alive neighbour' do
         game = Game.new(world, [[1, 0], [2, 0]])
         game.tick!
-        world.cell_grid[1][0].to be_dead
-        world.cell_grid[2][0].to be_dead
+        expect(world.cell_grid[1][0]).to be_dead
+        expect(world.cell_grid[2][0]).to be_dead
       end
     end
   end

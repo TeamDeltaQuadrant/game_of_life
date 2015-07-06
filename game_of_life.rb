@@ -9,16 +9,29 @@ class Game
       world.cell_grid[seed[0]][seed[1]].alive = true
     end
   end
+
+  def tick!
+    world.cells.each do |cell|
+      #Rule 1
+      if cell.alive? and world.live_neighbours_around_cell(cell).count < 2
+        cell.die!
+      end
+    end
+  end
+
 end
 
 class World
-  attr_accessor :rows, :cols, :cell_grid
+  attr_accessor :rows, :cols, :cell_grid, :cells
   def initialize(rows=3, cols=3)
     @rows = rows
     @cols = cols
+    @cells = []
     @cell_grid = Array.new(rows) do |row|
                     Array.new(cols) do |col|
-                      Cell.new(col, row)
+                      cell = Cell.new(col, row)
+                      cells << cell
+                      cell
                     end
                 end
   end
@@ -86,4 +99,9 @@ class Cell
 
   def alive?; alive; end
   def dead?; !alive; end
+
+  def die!
+    @alive = false
+  end
+
 end
