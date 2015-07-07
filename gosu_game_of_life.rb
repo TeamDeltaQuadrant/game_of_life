@@ -4,7 +4,7 @@ require_relative 'game_of_life.rb'
 
 class GameOfLifeWindow < Gosu::Window
 
-  def initialize(height = 800, width = 600)
+  def initialize(height = 1200, width = 800)
     @height = height
     @width = width
     super height, width, false
@@ -28,6 +28,7 @@ class GameOfLifeWindow < Gosu::Window
   end
 
   def update
+    update_interval = 1000
     @game.tick!
   end
 
