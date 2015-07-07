@@ -4,9 +4,8 @@ require 'rspec'
 require_relative 'game_of_life.rb'
 
 describe 'Game of life' do
-
-  let!(:world){ World.new }
-  let!(:cell){ Cell.new(1, 1) }
+  let!(:world) { World.new }
+  let!(:cell) { Cell.new(1, 1) }
 
   context 'World' do
     subject { World.new }
@@ -35,7 +34,6 @@ describe 'Game of life' do
     end
 
     it 'should add all cells to cells array' do
-      expect(subject.cells.count).to eq(9)
       expect(subject.cells.count).to eq(9)
     end
 
@@ -84,11 +82,10 @@ describe 'Game of life' do
       subject.randomly_populate
       expect(subject.live_cells.count).not_to eq(0)
     end
-
   end
 
   context 'Cell' do
-    subject {Cell.new}
+    subject { Cell.new }
 
     it 'should create a new cell object' do
       expect(subject.is_a?(Cell)).to be true
@@ -132,7 +129,7 @@ describe 'Game of life' do
   end
 
   context 'Rules' do
-    let!(:game){Game.new}
+    let!(:game) { Game.new }
     context 'Rule 1: Any live cell with fewer than two live neighbours dies, as if caused by under-population.' do
       it 'should kill a alive cell with no neighbours' do
         game.world.cell_grid[1][1].alive = true

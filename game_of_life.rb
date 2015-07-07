@@ -1,7 +1,7 @@
 # Basic file
 class Game
   attr_accessor :world, :seeds
-  def initialize(world=World.new, seeds=[])
+  def initialize(world = World.new, seeds = [])
     @world = world
     @seeds = seeds
 
@@ -17,60 +17,54 @@ class Game
     world.cells.each do |cell|
       neighbours = world.live_neighbours_around_cell(cell).count
 
-      #Rule 1
+      # Rule 1
       if cell.alive? && neighbours < 2
         next_round_dead_cells << cell
       end
 
-      #Rule 2
+      # Rule 2
       if cell.alive? && [2, 3].include?(neighbours)
         next_round_live_cells << cell
 
       end
 
-      #Rule 3
+      # Rule 3
       if cell.alive? && neighbours > 3
         next_round_dead_cells << cell
       end
 
-      #Rule 4
+      # Rule 4
       if cell.dead? && neighbours == 3
         next_round_live_cells << cell
       end
     end
 
-    next_round_live_cells.each do |cell|
-      cell.revive!
-    end
+    next_round_live_cells.each(&:revive!)
 
-    next_round_dead_cells.each do |cell|
-      cell.die!
-    end
-
+    next_round_dead_cells.each(&:die!)
   end
-
 end
 
 class World
   attr_accessor :rows, :cols, :cell_grid, :cells
-  def initialize(rows=3, cols=3)
+  def initialize(rows = 3, cols = 3)
     @rows = rows
     @cols = cols
     @cells = []
     @cell_grid = Array.new(rows) do |row|
-                    Array.new(cols) do |col|
-                      cell = Cell.new(col, row)
-                      cells << cell
-                      cell
-                    end
-                end
+      Array.new(cols) do |col|
+        cell = Cell.new(col, row)
+        cells << cell
+        cell
+      end
+    end
   end
 
   def live_neighbours_around_cell(cell)
     live_neighbours = []
     # it detects a neighbour to the north east
     if cell.y > 0 && cell.x < (cols - 1)
-      candidate = @cell_grid[cell.y - 1][cell.x + 1]
+      candidate = cell_grid[cell.y - 1][cell.x + 1]
       live_neighbours << candidate if candidate.alive?
     end
 
@@ -119,7 +113,7 @@ class World
   end
 
   def live_cells
-    cells.select { |cell| cell.alive }
+    cells.select(&:alive)
   end
 
   def randomly_populate
@@ -137,9 +131,13 @@ class Cell
     @y = y
   end
 
-  def alive?; alive; end
+  def alive?
+    alive
+  end
 
-  def dead?; !alive; end
+  def dead?
+    !alive
+  end
 
   def revive!
     @alive = true
@@ -148,5 +146,4 @@ class Cell
   def die!
     @alive = false
   end
-
 end
