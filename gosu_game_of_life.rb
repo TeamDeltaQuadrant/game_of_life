@@ -16,11 +16,11 @@ class GameOfLifeWindow < Gosu::Window
     @dead_color = Gosu::Color.new(0xffededed)
 
     # Game itself
-    @cols = width/10
-    @rows = height/10
+    @cols = width / 10
+    @rows = height / 10
 
-    @col_width = width/@cols
-    @row_height = height/@rows
+    @col_width = width / @cols
+    @row_height = height / @rows
 
     @world = World.new(@cols, @rows)
     @game = Game.new(@world)
@@ -49,7 +49,6 @@ class GameOfLifeWindow < Gosu::Window
                   cell.x * @col_width, cell.y * @row_height + (@row_height - 1), @alive_color)
       else
 
-
         draw_quad(cell.x * @col_width, cell.y * @row_height, @dead_color,
                   cell.x * @col_width + (@col_width - 1), cell.y * @row_height, @dead_color,
                   cell.x * @col_width + (@col_width - 1), cell.y * @row_height + (@row_height - 1), @dead_color,
@@ -58,8 +57,9 @@ class GameOfLifeWindow < Gosu::Window
     end
   end
 
-  def needs_cursor?; true; end
-
+  def needs_cursor?
+    true
+  end
 end
 
 GameOfLifeWindow.new.show
